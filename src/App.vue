@@ -10,6 +10,7 @@
         <button class="tab-btn" :class="{ active: activeTab === 'search' }" @click="activeTab = 'search'">Search</button>
         <button class="tab-btn" :class="{ active: activeTab === 'magic' }" @click="activeTab = 'magic'">Magic Items</button>
         <button class="tab-btn" :class="{ active: activeTab === 'jewels' }" @click="activeTab = 'jewels'">Jewels &amp; Charms</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'bases' }" @click="activeTab = 'bases'">Base Items</button>
       </div>
 
       <template v-if="activeTab === 'search'">
@@ -40,6 +41,9 @@
           </span>
           <span class="legend-item">
             <span class="legend-dot magic" />Magic / Rare — Specific Names
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot base" />Base Item — Eth / Superior / Socketed
           </span>
         </div>
 
@@ -81,7 +85,7 @@
       <template v-else-if="activeTab === 'magic'">
         <p class="magic-intro">
           These magic and rare items have significant value due to their <strong>specific prefixes, suffixes, and stats</strong>.
-          Look for them by their full name. 🐳 = whale-tier value.
+          Look for them by their full name. 🐳 = whale-tier value. <strong>Price estimates are non-ladder.</strong>
         </p>
         <div role="list">
           <div
@@ -102,9 +106,9 @@
         </div>
       </template>
 
-      <template v-else>
+      <template v-else-if="activeTab === 'jewels'">
         <p class="magic-intro">
-          <strong>Rainbow Facets</strong> are unique jewels — value depends on element, trigger type (Die &gt; Level), and roll (5/5 &gt; 5/X &gt; 4/5). ▲ = price trending up.
+          <strong>Rainbow Facets</strong> are unique jewels — value depends on element, trigger type (Die &gt; Level), and roll (5/5 &gt; 5/X &gt; 4/5). ▲ = price trending up. <strong>Price estimates are non-ladder.</strong>
         </p>
 
         <h2 class="magic-section-title">Rainbow Facets (Unique Jewels)</h2>
@@ -145,6 +149,35 @@
           </div>
         </div>
       </template>
+
+      <template v-else>
+        <p class="magic-intro">
+          Valuable base items for runewords and trading — Eth, Superior, and specific socket counts.
+          <strong>Price estimates are non-ladder</strong>, except Monarch prices which show both.
+          🐳 = whale-tier. ▲ = trending up.
+        </p>
+        <template v-for="section in BASE_SECTIONS" :key="section.title">
+          <h2 class="magic-section-title">{{ section.title }}</h2>
+          <div role="list">
+            <div
+              v-for="item in section.items"
+              :key="item.name"
+              class="result-card base"
+              role="listitem"
+            >
+              <div>
+                <div class="result-name">{{ item.name }}</div>
+                <div v-if="item.note" class="result-note">{{ item.note }}</div>
+              </div>
+              <div class="result-right">
+                <div class="result-value">{{ item.value }}</div>
+                <div v-if="item.valueLadder" class="result-value-ladder">Ladder: {{ item.valueLadder }}</div>
+                <span class="result-badge badge-base">Base Item</span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </template>
     </main>
 
     <footer>
@@ -175,7 +208,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS } from './data/items.js'
+import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS, BASE_SECTIONS } from './data/items.js'
 
 const query = ref('')
 const activeTab = ref('search')
@@ -241,6 +274,10 @@ const results = computed(() => {
   --purple:    #7c4dbd;
   --purple-bg: #150d26;
   --purple-fg: #b594f0;
+
+  --orange:    #c0712a;
+  --orange-bg: #1e0e04;
+  --orange-fg: #e8a060;
 }
 
 body {
@@ -326,6 +363,7 @@ main {
 .legend-dot.ldlv   { background: var(--teal); }
 .legend-dot.charsi { background: var(--red); }
 .legend-dot.magic  { background: var(--purple); }
+.legend-dot.base   { background: var(--orange); }
 
 .result-card {
   background: var(--surface);
@@ -345,6 +383,7 @@ main {
 .result-card.ldlv   { border-left-color: var(--teal); }
 .result-card.charsi { border-left-color: var(--red); }
 .result-card.magic  { border-left-color: var(--purple); }
+.result-card.base   { border-left-color: var(--orange); }
 
 .result-name {
   font-size: 0.97rem;
@@ -375,6 +414,7 @@ main {
 .badge-ldlv   { background: var(--teal-bg);  color: var(--teal-fg);   border: 1px solid var(--teal); }
 .badge-charsi { background: var(--red-bg);   color: var(--red-fg);    border: 1px solid var(--red); }
 .badge-magic  { background: var(--purple-bg); color: var(--purple-fg); border: 1px solid var(--purple); }
+.badge-base   { background: var(--orange-bg); color: var(--orange-fg); border: 1px solid var(--orange); }
 
 .tabs {
   display: flex;
@@ -412,6 +452,13 @@ main {
   font-size: 0.82rem;
   font-family: sans-serif;
   color: var(--purple-fg);
+  white-space: nowrap;
+}
+
+.result-value-ladder {
+  font-size: 0.75rem;
+  font-family: sans-serif;
+  color: var(--muted);
   white-space: nowrap;
 }
 

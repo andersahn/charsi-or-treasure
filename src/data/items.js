@@ -55,6 +55,91 @@ export const MAGIC_JEWELS = [
   { name: '15 All Res / 15 Max Damage Jewel',   value: 'Um - Mal',     note: 'All resist + max damage combo' },
 ]
 
+// ─── Base Items (Eth / Superior / Socketed) ───────────────────────────────────
+// valueLadder: separate ladder price where it differs from non-ladder
+// ▲ = price trending up
+export const BASE_SECTIONS = [
+  {
+    title: 'Armors',
+    items: [
+      { name: 'Mage Plate (3os, 15 ED)',                         value: 'Ohm',                      note: '' },
+      { name: 'Archon Plate (3os, 510+ Def)',                    value: 'Ist - Vex',                 note: '' },
+      { name: 'Archon Plate (3os, 15 ED)',                       value: '2x Ber',                    note: '' },
+      { name: 'Archon Plate (4os)',                              value: 'Pul - Um',                  note: '' },
+      { name: 'Archon Plate (4os, 15 ED)',                       value: '4 - 5 Ist',                 note: '' },
+      { name: 'Archon Plate (4os, Eth)',                         value: 'Mal - Ist',                 note: 'Eth 15 ED is 2-3 Bers' },
+      { name: 'Dusk Shroud (3os, 15 ED)',                        value: 'Lo+',                       note: '' },
+      { name: 'Dusk Shroud (4os)',                               value: 'Lem - Pul',                 note: '' },
+      { name: 'Eth Elite Armor (4os, 800+ Def)',                 value: '1 - 2 Ist',                 note: '' },
+      { name: 'Eth Elite Armor (4os, 900+ Def)',                 value: 'Ohm+',                      note: '' },
+      { name: 'Eth Elite Armor (3os, 900+ Def)',                 value: '1 - 2 Ist',                 note: '' },
+      { name: 'Eth Elite Armor (4os, 15 ED, 1000+ Def)',         value: '🐳🐳🐳',                   note: 'Value depends on base' },
+    ],
+  },
+  {
+    title: 'Shields',
+    items: [
+      { name: 'Plain Monarch',                                   value: 'PGems',      valueLadder: 'Lem - Pul',  note: '' },
+      { name: 'Monarch (4os)',                                   value: 'Lum - Lem',  valueLadder: 'Pul',        note: '' },
+      { name: 'Monarch (4os, 15 ED)',                            value: 'Lo+',                                   note: '15 dura adds value' },
+      { name: 'Sacred Targe (0os, 40+ Res All)',                 value: '2 - 3 Ist',                             note: '' },
+      { name: 'Sacred Targe (0os, 45 Res All, 15 ED)',           value: '🐳',                                    note: '' },
+      { name: 'Sacred Targe (3os, 45 Res All)',                  value: '🐳',                                    note: '' },
+      { name: 'Sacred Targe (0 or 4os, 45 Res All)',             value: 'Ohm++',                                 note: '' },
+      { name: 'Eth Sacred Targe (0os, 45 Res All)',              value: '🐳',                                    note: '' },
+      { name: 'Eth Vortex Shield (4os, 40+ Res All)',            value: '🐳',                                    note: '' },
+      { name: 'Eth Sacred Targe / Vortex Shield (45 Res, 4os)',  value: '🐳🐳🐳',                               note: '' },
+    ],
+  },
+  {
+    title: 'Polearms',
+    items: [
+      { name: 'Eth Colossus Voulge (4os)',                       value: 'Pul - Mal',                 note: '' },
+      { name: 'Eth Cryptic Axe (4os)',                           value: 'Ist - 2 Ist',               note: '' },
+      { name: 'Eth Thresher (4os)',                              value: 'Vex - Ohm',                 note: '' },
+      { name: 'Eth Giant Thresher (4os)',                        value: 'Lo & Ohm - Sur & Ohm ▲',   note: '' },
+      { name: 'Eth Great Poleaxe (4os)',                         value: 'Ohm & Ist - Lo',            note: '' },
+      { name: 'Eth Cryptic Axe (5os)',                           value: 'Um - Mal',                  note: '' },
+      { name: 'Eth Giant Thresher (5os)',                        value: '1 - 2 Ist',                 note: '' },
+      { name: 'Eth Thresher (No sockets)',                       value: 'Um - Mal',                  note: '' },
+    ],
+  },
+  {
+    title: 'Swords & Axes',
+    items: [
+      { name: 'Flail (4os)',                                     value: 'PGems - Lum',               note: '' },
+      { name: 'Flail (5os)',                                     value: 'Lum - Lem',                 note: '' },
+      { name: 'Phase Blade (5os)',                               value: 'PGems / Lum - Lem',         note: '' },
+      { name: 'Phase Blade (5os, 15 ED, 3 AR)',                  value: '7 - 8 Ist',                 note: '' },
+      { name: 'Berserker Axe (4os, Eth)',                        value: 'Ist',                       note: '' },
+      { name: 'Berserker Axe (5os, Eth)',                        value: 'Mal - Ist',                 note: 'Non-eth is Gul' },
+      { name: 'Berserker Axe (5os, Eth, 15 ED)',                 value: '🐳',                        note: '' },
+      { name: 'Berserker Axe (6os, Eth)',                        value: '2 - 3 Ist',                 note: '' },
+      { name: 'Eth Colossus Blade (4os)',                        value: 'Mal - Ist',                 note: '' },
+      { name: 'Eth Colossus Blade (0os)',                        value: 'Pul - Um',                  note: '' },
+      { name: 'Eth Colossus Blade (6os)',                        value: 'Ist - 2 Ist',               note: '' },
+      { name: 'Eth Colossus Blade (6os, 15 ED)',                 value: '🐳',                        note: '' },
+      { name: 'Eth Balrog Blade (3os)',                          value: 'Pul - Um',                  note: '' },
+      { name: 'Eth Balrog Blade (4os)',                          value: 'Pul',                       note: '' },
+      { name: 'Eth Balrog Blade (4os, 15 ED)',                   value: '—',                         note: '' },
+    ],
+  },
+  {
+    title: 'Bows',
+    items: [
+      { name: 'Grand Matron Bow (4os, +3 Skill)',                value: 'Ist - 2x Ist',              note: '' },
+      { name: 'Grand Matron Bow (4os, +3 Skill, 15 ED, +AR)',    value: '🐳🐳🐳',                   note: '10+ Bers; 15 ED + 3 AR is ~20 Bers' },
+      { name: 'Diamond / Shadow Bow (4os, 15 ED)',               value: 'Sur+',                      note: 'More with 3 AR' },
+    ],
+  },
+  {
+    title: 'Helms & Pelts',
+    items: [
+      { name: '3 Tornado / +3 Hurricane Pelt (3os)',             value: '5 - 6 Ist',                 note: '' },
+    ],
+  },
+]
+
 export const ITEMS = [
 
   // ═══ HD/HV — Godly Drops ═══════════════════════════════════════════════════
@@ -620,4 +705,13 @@ export const ITEMS = [
     note:  item.note,
     value: item.value,
   })),
+
+  // ═══ Base Items — Eth / Superior / Socketed ════════════════════════════════
+  ...BASE_SECTIONS.flatMap(s => s.items.map(item => ({
+    name:  item.name,
+    tier:  'base',
+    label: 'Base Item',
+    note:  item.note,
+    value: item.valueLadder ? `${item.value} (NL) · ${item.valueLadder} (Ladder)` : item.value,
+  }))),
 ]
