@@ -6,63 +6,145 @@
     </header>
 
     <main>
-      <div class="search-wrap">
-        <input
-          v-model="query"
-          type="search"
-          autocomplete="off"
-          autocorrect="off"
-          spellcheck="false"
-          placeholder="Search for an item… e.g. Chance Guards, Shako, Ali Baba"
-          aria-label="Search items"
-        />
+      <div class="tabs">
+        <button class="tab-btn" :class="{ active: activeTab === 'search' }" @click="activeTab = 'search'">Search</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'magic' }" @click="activeTab = 'magic'">Magic Items</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'jewels' }" @click="activeTab = 'jewels'">Jewels &amp; Charms</button>
       </div>
 
-      <div class="legend" aria-hidden="true">
-        <span class="legend-item">
-          <span class="legend-dot hdhv" />Godly / GG — High Runes
-        </span>
-        <span class="legend-item">
-          <span class="legend-dot hdmv" />High Demand — Mid Runes
-        </span>
-        <span class="legend-item">
-          <span class="legend-dot ldlv" />Stash It — Low Value
-        </span>
-        <span class="legend-item">
-          <span class="legend-dot charsi" />Charsi Food — Sell It
-        </span>
-      </div>
+      <template v-if="activeTab === 'search'">
+        <div class="search-wrap">
+          <input
+            v-model="query"
+            type="search"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder="Search for an item… e.g. Chance Guards, Shako, Ali Baba"
+            aria-label="Search items"
+          />
+        </div>
 
-      <div role="list" aria-live="polite">
-        <template v-if="!query.trim()">
-          <p class="empty-state">Type an item name to look it up.</p>
-        </template>
+        <div class="legend" aria-hidden="true">
+          <span class="legend-item">
+            <span class="legend-dot hdhv" />Godly / GG — High Runes
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot hdmv" />High Demand — Mid Runes
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot ldlv" />Stash It — Low Value
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot charsi" />Charsi Food — Sell It
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot magic" />Magic / Rare — Specific Names
+          </span>
+        </div>
 
-        <template v-else-if="results.length === 0">
-          <div class="not-found">
-            <strong>"{{ query.trim() }}"</strong> wasn't found in our list.<br />
-            It may be missing from this guide — check the source wiki or the D2R community.
-          </div>
-        </template>
+        <div role="list" aria-live="polite">
+          <template v-if="!query.trim()">
+            <p class="empty-state">Type an item name to look it up.</p>
+          </template>
 
-        <template v-else>
+          <template v-else-if="results.length === 0">
+            <div class="not-found">
+              <strong>"{{ query.trim() }}"</strong> wasn't found in our list.<br />
+              It may be missing from this guide — check the source wiki or the D2R community.
+            </div>
+          </template>
+
+          <template v-else>
+            <div
+              v-for="item in results"
+              :key="item.name"
+              class="result-card"
+              :class="item.tier"
+              role="listitem"
+            >
+              <div>
+                <div class="result-name">{{ item.name }}</div>
+                <div v-if="item.note" class="result-note">{{ item.note }}</div>
+              </div>
+              <div class="result-right">
+                <div v-if="item.value" class="result-value">{{ item.value }}</div>
+                <span class="result-badge" :class="`badge-${item.tier}`">
+                  {{ item.label }}
+                </span>
+              </div>
+            </div>
+          </template>
+        </div>
+      </template>
+
+      <template v-else-if="activeTab === 'magic'">
+        <p class="magic-intro">
+          These magic and rare items have significant value due to their <strong>specific prefixes, suffixes, and stats</strong>.
+          Look for them by their full name. 🐳 = whale-tier value.
+        </p>
+        <div role="list">
           <div
-            v-for="item in results"
+            v-for="item in MAGIC_ITEMS"
             :key="item.name"
-            class="result-card"
-            :class="item.tier"
+            class="result-card magic"
             role="listitem"
           >
             <div>
               <div class="result-name">{{ item.name }}</div>
               <div v-if="item.note" class="result-note">{{ item.note }}</div>
             </div>
-            <span class="result-badge" :class="`badge-${item.tier}`">
-              {{ item.label }}
-            </span>
+            <div class="result-right">
+              <div class="result-value">{{ item.value }}</div>
+              <span class="result-badge badge-magic">Magic Item</span>
+            </div>
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
+
+      <template v-else>
+        <p class="magic-intro">
+          <strong>Rainbow Facets</strong> are unique jewels — value depends on element, trigger type (Die &gt; Level), and roll (5/5 &gt; 5/X &gt; 4/5). ▲ = price trending up.
+        </p>
+
+        <h2 class="magic-section-title">Rainbow Facets (Unique Jewels)</h2>
+        <div role="list">
+          <div
+            v-for="item in RAINBOW_FACETS"
+            :key="item.name"
+            class="result-card hdhv"
+            role="listitem"
+          >
+            <div>
+              <div class="result-name">{{ item.name }}</div>
+              <div v-if="item.note" class="result-note">{{ item.note }}</div>
+            </div>
+            <div class="result-right">
+              <div class="result-value">{{ item.value }}</div>
+              <span class="result-badge badge-hdhv">Rainbow Facet</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 class="magic-section-title">Magic Jewels</h2>
+        <div role="list">
+          <div
+            v-for="item in MAGIC_JEWELS"
+            :key="item.name"
+            class="result-card magic"
+            role="listitem"
+          >
+            <div>
+              <div class="result-name">{{ item.name }}</div>
+              <div v-if="item.note" class="result-note">{{ item.note }}</div>
+            </div>
+            <div class="result-right">
+              <div class="result-value">{{ item.value }}</div>
+              <span class="result-badge badge-magic">Magic Jewel</span>
+            </div>
+          </div>
+        </div>
+      </template>
     </main>
 
     <footer>
@@ -79,6 +161,12 @@
           target="_blank"
           rel="noopener"
         >Nokk's Guide: Trash It or Stash It</a>
+        &nbsp;·&nbsp;
+        <a
+          href="https://docs.google.com/spreadsheets/d/1S4Augoamhf0by_tkiOIT4D1HFItzSeXMrZz_OqTBrCo"
+          target="_blank"
+          rel="noopener"
+        >Magic Items Price List (Google Sheets)</a>
       </p>
       <p class="footer-sub">Not affiliated with Blizzard Entertainment. Fan project.</p>
     </footer>
@@ -87,9 +175,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { ITEMS } from './data/items.js'
+import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS } from './data/items.js'
 
 const query = ref('')
+const activeTab = ref('search')
 
 function normalise(s) {
   return s.toLowerCase()
@@ -148,6 +237,10 @@ const results = computed(() => {
   --red:    #c0392b;
   --red-bg: #280808;
   --red-fg: #e07070;
+
+  --purple:    #7c4dbd;
+  --purple-bg: #150d26;
+  --purple-fg: #b594f0;
 }
 
 body {
@@ -232,6 +325,7 @@ main {
 .legend-dot.hdmv   { background: var(--green); }
 .legend-dot.ldlv   { background: var(--teal); }
 .legend-dot.charsi { background: var(--red); }
+.legend-dot.magic  { background: var(--purple); }
 
 .result-card {
   background: var(--surface);
@@ -250,6 +344,7 @@ main {
 .result-card.hdmv   { border-left-color: var(--green); }
 .result-card.ldlv   { border-left-color: var(--teal); }
 .result-card.charsi { border-left-color: var(--red); }
+.result-card.magic  { border-left-color: var(--purple); }
 
 .result-name {
   font-size: 0.97rem;
@@ -275,10 +370,79 @@ main {
   flex-shrink: 0;
 }
 
-.badge-hdhv   { background: var(--gold-bg);  color: var(--gold-fg);  border: 1px solid var(--gold); }
-.badge-hdmv   { background: var(--green-bg); color: var(--green-fg); border: 1px solid var(--green); }
-.badge-ldlv   { background: var(--teal-bg);  color: var(--teal-fg);  border: 1px solid var(--teal); }
-.badge-charsi { background: var(--red-bg);   color: var(--red-fg);   border: 1px solid var(--red); }
+.badge-hdhv   { background: var(--gold-bg);   color: var(--gold-fg);   border: 1px solid var(--gold); }
+.badge-hdmv   { background: var(--green-bg); color: var(--green-fg);  border: 1px solid var(--green); }
+.badge-ldlv   { background: var(--teal-bg);  color: var(--teal-fg);   border: 1px solid var(--teal); }
+.badge-charsi { background: var(--red-bg);   color: var(--red-fg);    border: 1px solid var(--red); }
+.badge-magic  { background: var(--purple-bg); color: var(--purple-fg); border: 1px solid var(--purple); }
+
+.tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.4rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 0.5rem 1.1rem;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--gold-fg); border-bottom-color: var(--gold); }
+
+.result-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.result-value {
+  font-size: 0.82rem;
+  font-family: sans-serif;
+  color: var(--purple-fg);
+  white-space: nowrap;
+}
+
+.magic-intro {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.2rem;
+  padding: 0.75rem 1rem;
+  background: var(--purple-bg);
+  border: 1px solid var(--purple);
+  border-radius: 4px;
+}
+
+.magic-intro strong { color: var(--purple-fg); font-style: normal; }
+
+.magic-section-title {
+  font-size: 0.8rem;
+  font-family: sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--purple-fg);
+  margin: 1.2rem 0 0.6rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--purple);
+  opacity: 0.8;
+}
+
+.magic-section-title:first-of-type { margin-top: 0; }
 
 .not-found {
   text-align: center;

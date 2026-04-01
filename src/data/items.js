@@ -3,6 +3,57 @@
 //        hdmv   = High Demand / Mid Value   — worth Mid Runes
 //        ldlv   = Low Demand / Low Value    — stash it, worth a little
 //        charsi = No Demand / No Value      — sell to Charsi
+//        magic  = Magic/Rare Items          — specific names with high value
+
+// ─── Magic & Rare Items ───────────────────────────────────────────────────────
+// value: approximate worth in runes / 🐳 = whale-tier (extremely rare/valuable)
+export const MAGIC_ITEMS = [
+  { name: "Jeweler's Monarch of Deflecting (JMoD)",                          abbr: 'JMoD',   value: '6 - 10 Ber 🐳',           note: '4-socket Monarch with Deflecting — top PvP block shield' },
+  { name: "Jeweler's Archon Plate of the Whale (90+ Life)",                  abbr: null,     value: '2 - 3 Jah',                note: '4-socket armor with life roll 90+' },
+  { name: "Jeweler's Archon Plate of the Whale (100+ Life)",                 abbr: null,     value: '4 - 6 Jah',                note: '4-socket armor with life roll 100+' },
+  { name: "Jeweler's Archon Plate of Stability (24 FHR)",                    abbr: null,     value: '1 - 2 Jah',                note: '4-socket armor with max FHR roll' },
+  { name: "Artisan's Mage Plate of Squid (80 Life)",                         abbr: null,     value: 'Lo~ 🐳',                   note: 'Value will climb if LLD takes off' },
+  { name: "Harpoonist's Matriarchal Javelin of Quickness (+4 Jav / 40 IAS)", abbr: null,     value: '2 - 3 Jah',                note: '+4 Javelin and Spear Skills with 40 IAS' },
+  { name: "Lancer's Matriarchal Javelin of Quickness (+6 Jav / 40 IAS)",     abbr: null,     value: '🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳🐳', note: '+6 Javelin and Spear Skills with 40 IAS — godly' },
+  { name: '+2 Javelin Skills / 20 IAS Gloves',                               abbr: null,     value: 'Um - Mal',                 note: 'Magic gloves — flat Jav skills + IAS' },
+  { name: '+3 Javelin Skills / 20 IAS Gloves',                               abbr: null,     value: '2 Ist - 3 Ist',            note: 'Magic gloves — max Jav skills + IAS' },
+  { name: '2 Jav Skills / 20 IAS Gloves with Life/Dex/Leech/Res (Rare)',     abbr: null,     value: 'Mal → HRs',                note: 'Rare gloves — value depends on additional mods' },
+  { name: "Artisan's Tiara of Speed (30 FRW)",                               abbr: null,     value: '2x Ber+ 🐳',              note: '3-socket tiara with max FRW' },
+  { name: "Jeweler's Sacred Targe of Deflecting (JSTaD)",                    abbr: 'JSTaD',  value: '🐳🐳',                    note: '4-socket Sacred Targe with Deflecting — elite PvP shield' },
+]
+
+// ─── Rainbow Facets (Unique Jewels) ──────────────────────────────────────────
+// Trigger types: Die = "Cast on Death" (more valuable), Level = "Cast on Level Up"
+// ▲ = price trending up
+export const RAINBOW_FACETS = [
+  { name: '5/5 Lightning Facet (Die)',           value: 'Sur - Ber ▲',          note: 'Best facet in game — highest demand' },
+  { name: '5/5 Lightning Facet (Level)',         value: 'Sur ▲',                note: 'Die version preferred; Level still top tier' },
+  { name: '5/4 Lightning Facet',                 value: 'Ohm',                  note: 'Near-perfect Lightning facet' },
+  { name: '5/5 Cold Facet (Die)',                value: 'Vex+ ▲',               note: 'Die version of Cold facet — strong demand' },
+  { name: '5/5 Cold Facet (Level)',              value: 'Vex ▲',                note: '' },
+  { name: '5/X or 4/5 Cold Facet',              value: 'Ist',                  note: 'Off-roll Cold facet' },
+  { name: '5/5 Fire Facet (Die)',                value: 'Ist - Ist & Mal ▲',    note: 'Die version of Fire facet' },
+  { name: '5/5 Fire Facet (Level)',              value: 'Ist ▲',                note: '' },
+  { name: '5/X or 4/5 Fire Facet',              value: 'Mal ▲',                note: 'Off-roll Fire facet — prices climbing' },
+  { name: '5/5 Poison Facet (Die or Level)',     value: 'Ist ▲',                note: 'Poison facets are undervalued — trending up' },
+  { name: '5/X or X/5 Poison Facet',            value: 'Mal - Mal & Um ▲',     note: 'Off-roll Poison facet' },
+  { name: '3/X Facet (Any Element)',             value: 'PGems - Lum',          note: 'Low roll facets — any element, any trigger' },
+]
+
+// ─── Magic Jewels ─────────────────────────────────────────────────────────────
+export const MAGIC_JEWELS = [
+  { name: '40 ED Jewel',                        value: 'Lem - Pul',    note: 'Jewel of Fervor — 40 Enhanced Damage' },
+  { name: '35+ ED Jewel',                       value: 'Lum - Lem',    note: '35 or more Enhanced Damage' },
+  { name: '15 IAS Jewel',                       value: 'Free / PGems', note: 'Jewel of Fervor — 15 Increased Attack Speed' },
+  { name: '15 All Res Jewel',                   value: 'Pul+',         note: 'Jewel of Remedy — 15 Resist All' },
+  { name: '30 Single Res Jewel',                value: 'Pul - Um',     note: 'e.g. 30 Fire / Cold / Lightning / Poison resist' },
+  { name: '20–30 Max Damage Jewel',             value: '—',            note: 'Value varies by exact max damage roll' },
+  { name: '40 ED / 15 IAS Jewel',               value: '2+ Ber',       note: 'BiS for most physical damage builds' },
+  { name: '36 ED / 15 IAS Jewel',               value: '7 - 8 Ist',   note: 'Near-perfect combo jewel' },
+  { name: '30 Single Res / 15 IAS Jewel',       value: '4 - 5 Ist',   note: 'Single element resist + IAS combo' },
+  { name: '15 All Res / 15 IAS Jewel',          value: '4+ Ber',       note: 'Extremely rare all res + IAS combo' },
+  { name: '15 All Res / 15 Max Damage Jewel',   value: 'Um - Mal',     note: 'All resist + max damage combo' },
+]
 
 export const ITEMS = [
 
@@ -13,7 +64,7 @@ export const ITEMS = [
   { name: 'Harlequin Crest',            tier: 'hdhv', label: 'Godly Drop',   note: 'The Shako — MF + +2 skills helm' },
   { name: 'Hellfire Torch',             tier: 'hdhv', label: 'Godly Drop',   note: 'Only unique large charm, +3 skills' },
   { name: "Mara's Kaleidoscope",        tier: 'hdhv', label: 'Godly Drop',   note: '+skills + all res amulet' },
-  { name: 'Rainbow Facet',              tier: 'hdhv', label: 'Godly Drop',   note: 'Unique jewel — Light/Cold rolls most valuable' },
+  { name: 'Rainbow Facet',              tier: 'hdhv', label: 'Godly Drop',   note: 'Unique jewel — see Jewels tab for specific roll values' },
   { name: 'Skin of the Vipermagi',      tier: 'hdhv', label: 'Godly Drop',   note: '+Skills, FCR, All Res body armor' },
   { name: 'The Stone of Jordan',        tier: 'hdhv', label: 'Godly Drop',   note: 'SoJ — +1 skills, mana ring' },
   { name: 'War Traveler',               tier: 'hdhv', label: 'Godly Drop',   note: 'Only unique boots with Magic Find' },
@@ -542,4 +593,31 @@ export const ITEMS = [
   { name: "Warlord's Trust",            tier: 'charsi', label: 'Charsi Food', note: 'Unique weapon' },
   { name: 'Witherstring',               tier: 'charsi', label: 'Charsi Food', note: 'Unique weapon' },
   { name: "Zakarum's Hand",             tier: 'charsi', label: 'Charsi Food', note: 'Unique weapon' },
+
+  // ═══ Magic / Rare — Specific Named Items ═════════════════════════════════════
+  ...MAGIC_ITEMS.map(item => ({
+    name:  item.name,
+    tier:  'magic',
+    label: 'Magic Item',
+    note:  item.note,
+    value: item.value,
+  })),
+
+  // ═══ Magic Jewels — Specific Stat Combos ══════════════════════════════════
+  ...MAGIC_JEWELS.map(item => ({
+    name:  item.name,
+    tier:  'magic',
+    label: 'Magic Jewel',
+    note:  item.note,
+    value: item.value,
+  })),
+
+  // ═══ Rainbow Facets — Specific Rolls ══════════════════════════════════════
+  ...RAINBOW_FACETS.map(item => ({
+    name:  item.name,
+    tier:  'hdhv',
+    label: 'Rainbow Facet',
+    note:  item.note,
+    value: item.value,
+  })),
 ]
