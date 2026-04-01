@@ -12,6 +12,10 @@
         <button class="tab-btn" :class="{ active: activeTab === 'jewels' }" @click="activeTab = 'jewels'">Jewels &amp; Charms</button>
         <button class="tab-btn" :class="{ active: activeTab === 'bases' }" @click="activeTab = 'bases'">Base Items</button>
         <button class="tab-btn" :class="{ active: activeTab === 'commodities' }" @click="activeTab = 'commodities'">Commodities</button>
+        <div class="ladder-toggle">
+          <button class="ladder-btn" :class="{ active: !ladder }" @click="ladder = false">NL</button>
+          <button class="ladder-btn" :class="{ active: ladder }" @click="ladder = true">Ladder</button>
+        </div>
       </div>
 
       <template v-if="activeTab === 'search'">
@@ -74,9 +78,12 @@
               <div>
                 <div class="result-name">{{ item.name }}</div>
                 <div v-if="item.note" class="result-note">{{ item.note }}</div>
+                <div v-if="item.base" class="result-base">Base: {{ item.base }}</div>
               </div>
               <div class="result-right">
-                <div v-if="item.value" class="result-value">{{ item.value }}</div>
+                <div v-if="item.value" class="result-value">
+                  {{ ladder && item.valueLadder ? (item.ladderProjected ? '~' : '') + item.valueLadder : item.value }}
+                </div>
                 <span class="result-badge" :class="`badge-${item.tier}`">
                   {{ item.label }}
                 </span>
@@ -157,7 +164,7 @@
       <template v-else-if="activeTab === 'bases'">
         <p class="magic-intro">
           Valuable base items for runewords and trading — Eth, Superior, and specific socket counts.
-          <strong>Price estimates are non-ladder</strong>, except Monarch prices which show both.
+          Showing <strong>{{ ladder ? 'Ladder' : 'Non-Ladder' }}</strong> prices.
           🐳 = whale-tier. ▲ = trending up.
         </p>
         <template v-for="section in BASE_SECTIONS" :key="section.title">
@@ -174,8 +181,7 @@
                 <div v-if="item.note" class="result-note">{{ item.note }}</div>
               </div>
               <div class="result-right">
-                <div class="result-value">{{ item.value }}</div>
-                <div v-if="item.valueLadder" class="result-value-ladder">Ladder: {{ item.valueLadder }}</div>
+                <div class="result-value">{{ ladder && item.valueLadder ? item.valueLadder : item.value }}</div>
                 <span class="result-badge badge-base">Base Item</span>
               </div>
             </div>
@@ -186,7 +192,8 @@
       <template v-else>
         <p class="magic-intro">
           Relative values for common trade goods — gems, gold, keys, essences, and tokens.
-          Ladder values marked <em>~projected~</em> are estimates. ▲ = trending up.
+          Showing <strong>{{ ladder ? 'Ladder' : 'Non-Ladder' }}</strong> prices.
+          {{ ladder ? 'Values marked ~projected~ are estimates.' : '' }} ▲ = trending up.
         </p>
         <template v-for="section in COMMODITY_SECTIONS" :key="section.title">
           <h2 class="magic-section-title">{{ section.title }}</h2>
@@ -202,9 +209,8 @@
                 <div v-if="item.note" class="result-note">{{ item.note }}</div>
               </div>
               <div class="result-right">
-                <div class="result-value">{{ item.value }}</div>
-                <div v-if="item.valueLadder" class="result-value-ladder">
-                  Ladder: {{ item.ladderProjected ? '~' : '' }}{{ item.valueLadder }}
+                <div class="result-value">
+                  {{ ladder && item.valueLadder ? (item.ladderProjected ? '~' : '') + item.valueLadder : item.value }}
                 </div>
                 <span class="result-badge badge-commodity">Commodity</span>
               </div>
@@ -246,6 +252,7 @@ import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS, BASE_SECTIONS, COMMOD
 
 const query = ref('')
 const activeTab = ref('search')
+const ladder = ref(false)
 
 function normalise(s) {
   return s.toLowerCase()
@@ -261,9 +268,26 @@ function score(q, item) {
   if (n.startsWith(q)) return 80
   if (n.includes(q)) return 60
   const words = q.split(' ').filter(Boolean)
-  const hits = words.filter(w => n.includes(w))
-  if (hits.length === words.length) return 40
-  if (hits.length > 0) return hits.length * 10
+  const nameHits = words.filter(w => n.includes(w))
+  if (nameHits.length === words.length) return 40
+  if (nameHits.length > 0) return nameHits.length * 10
+
+  // base item name — medium priority (people search "shako", "monarch", "tower shield")
+  const base = normalise(item.base || '')
+  if (base) {
+    if (base === q || base.startsWith(q) || base.includes(q)) return 45
+    const baseHits = words.filter(w => base.includes(w))
+    if (baseHits.length === words.length) return 35
+    if (baseHits.length > 0) return baseHits.length * 8
+  }
+
+  // note / description — lower priority (catches "enhanced damage", "fervor", etc.)
+  const note = normalise(item.note || '')
+  if (note.includes(q)) return 30
+  const noteHits = words.filter(w => note.includes(w))
+  if (noteHits.length === words.length) return 25
+  if (noteHits.length > 0) return noteHits.length * 5
+
   return 0
 }
 
@@ -437,6 +461,14 @@ main {
   font-style: italic;
 }
 
+.result-base {
+  color: var(--orange-fg);
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+  font-family: sans-serif;
+  opacity: 0.75;
+}
+
 .result-badge {
   font-size: 0.72rem;
   font-family: sans-serif;
@@ -463,6 +495,36 @@ main {
   margin-bottom: 1.4rem;
   border-bottom: 2px solid var(--border);
   padding-bottom: 0;
+  align-items: flex-end;
+}
+
+.ladder-toggle {
+  margin-left: auto;
+  display: flex;
+  gap: 0;
+  margin-bottom: -2px;
+}
+
+.ladder-btn {
+  background: none;
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.7rem;
+  font-family: sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.ladder-btn:first-child { border-radius: 3px 0 0 3px; border-right: none; }
+.ladder-btn:last-child  { border-radius: 0 3px 3px 0; }
+
+.ladder-btn.active {
+  background: var(--gold-bg);
+  color: var(--gold-fg);
+  border-color: var(--gold);
 }
 
 .tab-btn {

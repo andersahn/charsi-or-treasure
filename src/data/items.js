@@ -205,7 +205,7 @@ export const ITEMS = [
   { name: 'Annihilus',                  tier: 'hdhv', label: 'Godly Drop',   note: 'Diablo Clone charm — any class, top-tier stats' },
   { name: 'Arachnid Mesh',              tier: 'hdhv', label: 'Godly Drop',   note: 'Only belt with FCR + skills' },
   { name: "Bul-Kathos' Wedding Band",   tier: 'hdhv', label: 'Godly Drop',   note: 'SoJ Jr — +1 skills ring' },
-  { name: 'Harlequin Crest',            tier: 'hdhv', label: 'Godly Drop',   note: 'The Shako — MF + +2 skills helm' },
+  { name: 'Harlequin Crest',            tier: 'hdhv', label: 'Godly Drop',   note: 'The Shako — MF + +2 skills helm',                 base: 'Shako' },
   { name: 'Hellfire Torch',             tier: 'hdhv', label: 'Godly Drop',   note: 'Only unique large charm, +3 skills' },
   { name: "Mara's Kaleidoscope",        tier: 'hdhv', label: 'Godly Drop',   note: '+skills + all res amulet' },
   { name: 'Rainbow Facet',              tier: 'hdhv', label: 'Godly Drop',   note: 'Unique jewel — see Jewels tab for specific roll values' },
@@ -292,7 +292,7 @@ export const ITEMS = [
   { name: "Heaven's Light",             tier: 'ldlv', label: 'Superior Melee', note: 'Paladin scepter — high price with perfect rolls' },
   { name: 'Lightsabre',                 tier: 'ldlv', label: 'Superior Melee', note: 'Decent weapon for levelling melee into Hell' },
   { name: "Schaefer's Hammer",          tier: 'ldlv', label: 'Superior Melee', note: 'Great Zealot option without Grief' },
-  { name: 'Stormshield',                tier: 'ldlv', label: 'Superior Melee', note: 'Ultimate defensive shield — HC staple' },
+  { name: 'Stormshield',                tier: 'ldlv', label: 'Superior Melee', note: 'Ultimate defensive shield — HC staple',            base: 'Monarch' },
   { name: 'String of Ears',             tier: 'ldlv', label: 'Superior Melee', note: 'Life steal belt, top choice for melee' },
   { name: 'Waterwalk',                  tier: 'ldlv', label: 'Superior Melee', note: 'Survivability boots for melee characters' },
 
@@ -767,21 +767,22 @@ export const ITEMS = [
 
   // ═══ Base Items — Eth / Superior / Socketed ════════════════════════════════
   ...BASE_SECTIONS.flatMap(s => s.items.map(item => ({
-    name:  item.name,
-    tier:  'base',
-    label: 'Base Item',
-    note:  item.note,
-    value: item.valueLadder ? `${item.value} (NL) · ${item.valueLadder} (Ladder)` : item.value,
+    name:         item.name,
+    tier:         'base',
+    label:        'Base Item',
+    note:         item.note,
+    value:        item.value,
+    valueLadder:  item.valueLadder,
   }))),
 
   // ═══ Commodities ═══════════════════════════════════════════════════════════
   ...COMMODITY_SECTIONS.flatMap(s => s.items.map(item => ({
-    name:  item.name,
-    tier:  'commodity',
-    label: 'Commodity',
-    note:  item.note,
-    value: item.valueLadder
-      ? `${item.value} (NL) · ${item.ladderProjected ? '~' : ''}${item.valueLadder} (Ladder)`
-      : item.value,
+    name:            item.name,
+    tier:            'commodity',
+    label:           'Commodity',
+    note:            item.note,
+    value:           item.value,
+    valueLadder:     item.valueLadder,
+    ladderProjected: item.ladderProjected,
   }))),
 ]
