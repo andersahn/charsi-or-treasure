@@ -140,6 +140,65 @@ export const BASE_SECTIONS = [
   },
 ]
 
+// ─── Commodities ─────────────────────────────────────────────────────────────
+// ladderProjected: true = ladder value is a projection, not confirmed
+export const COMMODITY_SECTIONS = [
+  {
+    title: 'High Runes',
+    items: [
+      { name: 'High Rune (HR)',               value: '12 - 14 Ist ▲',  valueLadder: '12 - 14 Ist', note: 'Any HR — pricing relative to Ist as unit' },
+    ],
+  },
+  {
+    title: 'Perfect Gems',
+    items: [
+      { name: 'Perfect Skull (PSkull)',        value: '1.2 PG',         valueLadder: '1.2 PG',      note: 'PG = Perfect Gem' },
+      { name: 'Perfect Ruby (PRuby)',          value: '1.5 PG',         valueLadder: '2 PG',        note: '' },
+      { name: 'Perfect Amethyst (PAmy)',       value: '3 PG',           valueLadder: '3.5 PG',      note: '' },
+    ],
+  },
+  {
+    title: 'Gold',
+    items: [
+      { name: '10 Million Gold',               value: 'Ist',            valueLadder: 'Mal - Ist',   note: '' },
+    ],
+  },
+  {
+    title: 'Bulk Gem Stacks',
+    items: [
+      { name: '40 Chipped Gems',              value: 'Lem - Pul',       valueLadder: 'Lem - Pul',   ladderProjected: true,  note: '' },
+      { name: '8-10 Perfect Gems',            value: 'Lem',             valueLadder: 'Lem',         ladderProjected: true,  note: '' },
+      { name: '40 Perfect Gems',              value: 'Ist',             valueLadder: 'Mal & Um',    ladderProjected: true,  note: '' },
+      { name: '40 Perfect Ruby',              value: 'Ist - Gul',       valueLadder: 'Gul',         ladderProjected: true,  note: '' },
+      { name: '40 Perfect Amethyst',          value: 'Vex+',            valueLadder: '2 Ist',       ladderProjected: true,  note: '' },
+    ],
+  },
+  {
+    title: 'Jewels',
+    items: [
+      { name: '40 Junk Jewels',               value: 'Lem - Pul',       valueLadder: 'Pul',         note: '' },
+    ],
+  },
+  {
+    title: 'Keys',
+    items: [
+      { name: 'Key Set (1 of each)',          value: 'Ist',             valueLadder: 'Ist',         note: '1 Skeleton, 1 Fanged, 1 Burning Key' },
+      { name: '3x3 Keys',                    value: 'Vex',             valueLadder: 'Vex',         note: '9 total keys' },
+      { name: '4x3 Keys',                    value: 'Vex + Ist',       valueLadder: 'Vex & Ist',   note: '12 total keys' },
+    ],
+  },
+  {
+    title: 'Essences & Tokens',
+    items: [
+      { name: 'Twisted Essence (Blue)',       value: 'Sold in bulk',    valueLadder: 'PGems',       note: 'NL: low individual value, sell in lots' },
+      { name: 'Charged Essence (Yellow)',     value: 'Sold in bulk',    valueLadder: 'Lum',         note: 'NL: low individual value, sell in lots' },
+      { name: 'Burning Essence (Red)',        value: 'Sold in bulk',    valueLadder: 'Lum - Lem',   note: 'NL: low individual value, sell in lots' },
+      { name: 'Festering Essence (Green)',    value: 'Mal',             valueLadder: 'Lem+',        note: '' },
+      { name: 'Token of Absolution',          value: 'Ist',             valueLadder: 'Pul & Lem - Pul & Pul', note: 'Crafted from all 4 essences' },
+    ],
+  },
+]
+
 export const ITEMS = [
 
   // ═══ HD/HV — Godly Drops ═══════════════════════════════════════════════════
@@ -713,5 +772,16 @@ export const ITEMS = [
     label: 'Base Item',
     note:  item.note,
     value: item.valueLadder ? `${item.value} (NL) · ${item.valueLadder} (Ladder)` : item.value,
+  }))),
+
+  // ═══ Commodities ═══════════════════════════════════════════════════════════
+  ...COMMODITY_SECTIONS.flatMap(s => s.items.map(item => ({
+    name:  item.name,
+    tier:  'commodity',
+    label: 'Commodity',
+    note:  item.note,
+    value: item.valueLadder
+      ? `${item.value} (NL) · ${item.ladderProjected ? '~' : ''}${item.valueLadder} (Ladder)`
+      : item.value,
   }))),
 ]

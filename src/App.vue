@@ -11,6 +11,7 @@
         <button class="tab-btn" :class="{ active: activeTab === 'magic' }" @click="activeTab = 'magic'">Magic Items</button>
         <button class="tab-btn" :class="{ active: activeTab === 'jewels' }" @click="activeTab = 'jewels'">Jewels &amp; Charms</button>
         <button class="tab-btn" :class="{ active: activeTab === 'bases' }" @click="activeTab = 'bases'">Base Items</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'commodities' }" @click="activeTab = 'commodities'">Commodities</button>
       </div>
 
       <template v-if="activeTab === 'search'">
@@ -44,6 +45,9 @@
           </span>
           <span class="legend-item">
             <span class="legend-dot base" />Base Item — Eth / Superior / Socketed
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot commodity" />Commodity — Gems, Keys, Essences
           </span>
         </div>
 
@@ -150,7 +154,7 @@
         </div>
       </template>
 
-      <template v-else>
+      <template v-else-if="activeTab === 'bases'">
         <p class="magic-intro">
           Valuable base items for runewords and trading — Eth, Superior, and specific socket counts.
           <strong>Price estimates are non-ladder</strong>, except Monarch prices which show both.
@@ -173,6 +177,36 @@
                 <div class="result-value">{{ item.value }}</div>
                 <div v-if="item.valueLadder" class="result-value-ladder">Ladder: {{ item.valueLadder }}</div>
                 <span class="result-badge badge-base">Base Item</span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </template>
+
+      <template v-else>
+        <p class="magic-intro">
+          Relative values for common trade goods — gems, gold, keys, essences, and tokens.
+          Ladder values marked <em>~projected~</em> are estimates. ▲ = trending up.
+        </p>
+        <template v-for="section in COMMODITY_SECTIONS" :key="section.title">
+          <h2 class="magic-section-title">{{ section.title }}</h2>
+          <div role="list">
+            <div
+              v-for="item in section.items"
+              :key="item.name"
+              class="result-card commodity"
+              role="listitem"
+            >
+              <div>
+                <div class="result-name">{{ item.name }}</div>
+                <div v-if="item.note" class="result-note">{{ item.note }}</div>
+              </div>
+              <div class="result-right">
+                <div class="result-value">{{ item.value }}</div>
+                <div v-if="item.valueLadder" class="result-value-ladder">
+                  Ladder: {{ item.ladderProjected ? '~' : '' }}{{ item.valueLadder }}
+                </div>
+                <span class="result-badge badge-commodity">Commodity</span>
               </div>
             </div>
           </div>
@@ -208,7 +242,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS, BASE_SECTIONS } from './data/items.js'
+import { ITEMS, MAGIC_ITEMS, MAGIC_JEWELS, RAINBOW_FACETS, BASE_SECTIONS, COMMODITY_SECTIONS } from './data/items.js'
 
 const query = ref('')
 const activeTab = ref('search')
@@ -278,6 +312,10 @@ const results = computed(() => {
   --orange:    #c0712a;
   --orange-bg: #1e0e04;
   --orange-fg: #e8a060;
+
+  --sky:    #2a9cb8;
+  --sky-bg: #041418;
+  --sky-fg: #60d0e8;
 }
 
 body {
@@ -363,7 +401,8 @@ main {
 .legend-dot.ldlv   { background: var(--teal); }
 .legend-dot.charsi { background: var(--red); }
 .legend-dot.magic  { background: var(--purple); }
-.legend-dot.base   { background: var(--orange); }
+.legend-dot.base      { background: var(--orange); }
+.legend-dot.commodity { background: var(--sky); }
 
 .result-card {
   background: var(--surface);
@@ -383,7 +422,8 @@ main {
 .result-card.ldlv   { border-left-color: var(--teal); }
 .result-card.charsi { border-left-color: var(--red); }
 .result-card.magic  { border-left-color: var(--purple); }
-.result-card.base   { border-left-color: var(--orange); }
+.result-card.base      { border-left-color: var(--orange); }
+.result-card.commodity { border-left-color: var(--sky); }
 
 .result-name {
   font-size: 0.97rem;
@@ -414,7 +454,8 @@ main {
 .badge-ldlv   { background: var(--teal-bg);  color: var(--teal-fg);   border: 1px solid var(--teal); }
 .badge-charsi { background: var(--red-bg);   color: var(--red-fg);    border: 1px solid var(--red); }
 .badge-magic  { background: var(--purple-bg); color: var(--purple-fg); border: 1px solid var(--purple); }
-.badge-base   { background: var(--orange-bg); color: var(--orange-fg); border: 1px solid var(--orange); }
+.badge-base      { background: var(--orange-bg); color: var(--orange-fg); border: 1px solid var(--orange); }
+.badge-commodity { background: var(--sky-bg);    color: var(--sky-fg);    border: 1px solid var(--sky); }
 
 .tabs {
   display: flex;
